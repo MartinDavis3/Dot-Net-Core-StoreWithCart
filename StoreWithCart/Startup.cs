@@ -54,7 +54,10 @@ namespace StoreWithCart
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapRazorPages();
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "{controller=StockItems}/{action=Index}/{id?}"
+                );
             });
         }
     }
