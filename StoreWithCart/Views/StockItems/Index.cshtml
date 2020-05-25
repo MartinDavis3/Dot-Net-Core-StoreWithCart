@@ -5,11 +5,9 @@
     Layout = "~/Pages/shared/_Layout.cshtml";
 }
 
-<h1>Index</h1>
+<h1>Store Items</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+
 <table class="table">
     <thead>
         <tr>
@@ -19,10 +17,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.Price)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.QuantityInCart)
-            </th>
-            <th></th>
+             <th></th>
         </tr>
     </thead>
     <tbody>
@@ -35,14 +30,67 @@
                 @Html.DisplayFor(modelItem => item.Price)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.QuantityInCart)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <form asp-action="AddItemToCart" method="POST">
+                    <button class="add-item-to-cart-button" type="submit">Add Item To Cart</button>
+                    <input type="hidden" name="id" value="@item.Id" />
+                </form>
             </td>
         </tr>
 }
+    </tbody>
+</table>
+<h1>Cart</h1>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                Quantity
+            </th>
+            <th>
+                Cost
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @{decimal total = 0;}
+        @foreach (var item in Model)
+        {
+            @if (item.QuantityInCart > 0)
+            {
+                total = total + item.Price * item.QuantityInCart;
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.QuantityInCart)
+                    </td>
+                    <td>
+                        @(item.Price * item.QuantityInCart)
+                    </td>
+                    <td>
+                        <form asp-action="RemoveItemFromCart" method="POST">
+                            <button class="add-item-to-cart-button" type="submit">Remove Item From Cart</button>
+                            <input type="hidden" name="id" value="@item.Id" />
+                        </form>
+                    </td>
+                </tr>
+            }
+        }
+        <tr>
+            <td>
+            </td>
+            <td>
+                Total:
+            </td>
+            <td>
+                @total
+            </td>
+        </tr>
+
     </tbody>
 </table>

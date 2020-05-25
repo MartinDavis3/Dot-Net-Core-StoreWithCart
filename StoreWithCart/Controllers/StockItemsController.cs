@@ -149,5 +149,47 @@ namespace StoreWithCart.Controllers
         {
             return _context.StockItem.Any(e => e.Id == id);
         }
+
+        public async Task<IActionResult> AddItemToCart(int? id)
+        {
+            if (id == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            var stockItem = await _context.StockItem
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (stockItem == null)
+            {
+                return BadRequest("Could not add item to cart.");
+            }
+            stockItem.QuantityInCart++;
+            _context.Update(stockItem);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Index");
+        }
+
+        public async Task<IActionResult> RemoveItemFromCart(int? id)
+        {
+            if (id == null)
+            {
+                return RedirectToAction("Index");
+            }
+
+            var stockItem = await _context.StockItem
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (stockItem == null)
+            {
+                return BadRequest("Could not remove item from cart.");
+            }
+            stockItem.QuantityInCart--;
+            _context.Update(stockItem);
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Index");
+        }
+
     }
+
 }
